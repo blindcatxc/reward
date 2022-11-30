@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_26_155913) do
-  create_table "trans", force: :cascade do |t|
-    t.string "payer"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2022_11_27_040009) do
   create_table "transactions", force: :cascade do |t|
+    t.string "payer"
+    t.integer "points"
+    t.datetime "timestamp"
+    t.datetime "redeemed_at"
+    t.bigint "source_transaction_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
