@@ -30,38 +30,22 @@ ENV LANG=C.UTF-8 \
 
 RUN gem update --system && gem install bundler
 
-WORKDIR /usr/src/app
-
-# Dev stage is used for docker-based development. Do not inherit from this stage.
 FROM base as dev
 
-# install vim so we can edit credentials file in runner container
-RUN apt-get update -qq && apt-get install -yq --no-install-recommends vim
+WORKDIR /usr/src/app
 
 RUN useradd app-user -m \
 	&& chown -R app-user:app-user /usr/src/app
 
-ENTRYPOINT ["./entrypoint-dev.sh"]
-CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
-# ### END dev
+COPY . ./
+RUN bundle install --without development test && bundle clean --force
 
-# # Build production image
-# FROM base as prod
+ENV RAILS_SERVE_STATIC_FILES=yes
+ENV RAILS_LOG_TO_STDOUT=true
+RUN bundle exec rails assets:precompile
 
-# WORKDIR /usr/src/app
+ENV PORT=3000
+EXPOSE ${PORT}
 
-# RUN useradd app-user -m \
-# 	&& chown -R app-user:app-user /usr/src/app
-
-# COPY . ./
-# RUN bundle install --without development test && bundle clean --force
-
-# ENV RAILS_SERVE_STATIC_FILES=yes
-# ENV RAILS_LOG_TO_STDOUT=true
-# RUN bundle exec rails assets:precompile
-
-# ENV PORT=3000
-# EXPOSE ${PORT}
-
-# USER app-user
-# CMD []
+USER app-user
+CMD []
