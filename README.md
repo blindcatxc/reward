@@ -13,6 +13,7 @@
   docker-compose up web
 ```
 ** the server default port is 3001, if you want to customize that, feel free to modify the line 20 in docker-compose.yml
+from 3001 to any port you'd prefered
 
 # Api Spec
 ## Create transaction
